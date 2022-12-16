@@ -14,7 +14,7 @@ namespace TianLiUpdate.API.Controllers
         {
             _context = context;
         }
-
+/*
         // GET: api/<VersionsController>
         [HttpGet]
         public IActionResult Get()
@@ -44,6 +44,7 @@ namespace TianLiUpdate.API.Controllers
             return Ok(_context.Versions
                 .Where(v => v.ProjectItemID == project.ProjectItemID));
         }
+        */
         /*
         // GET api/<VersionsController>/5
         [HttpGet("{id}")]

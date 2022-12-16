@@ -24,12 +24,12 @@ namespace TianLiUpdate.API.Controllers
         {
             return Ok(_context.Projects.Select(p => p.Name));
         }
-
+        /*
         // GET Projects/Name
         [HttpGet("{name}")]
-        public ActionResult<ProjectItem> Get(string name, string Token)
+        public ActionResult<ProjectItem> Get(string name, string token)
         {
-            var tokens = _context.Tokens.Where(t => t.TokenString == Token);
+            var tokens = _context.Tokens.Where(t => t.TokenString == token);
             if(tokens.Count() == 0)
             {
                 _logger.LogInformation("Token Unauthorized");
@@ -37,9 +37,9 @@ namespace TianLiUpdate.API.Controllers
             }
             return Ok(_context.Projects.Where(p => p.Name == name).FirstOrDefault());
         }
-
-        // POST Projects/Name
-        [HttpPost("{name}")]
+        */
+        // POST Projects
+        [HttpPost]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Post(string name, string token)
         {
@@ -53,7 +53,7 @@ namespace TianLiUpdate.API.Controllers
             _context.SaveChanges();
             return Ok();
         }
-
+        /*
         // PUT Projects/Id
         [HttpPut("{id}")]
         public IActionResult Put(int id,  ProjectItem value, string token)
@@ -89,7 +89,7 @@ namespace TianLiUpdate.API.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        
+        */
         // GET: Projects/ProjectName/Versions
         [HttpGet("{name}/Versions")]
         public IActionResult GetVersions(string name)
@@ -124,8 +124,10 @@ namespace TianLiUpdate.API.Controllers
                 _logger.LogInformation("No versions found");
                 return NotFound("No versions found");
             }
-            var versions = project.Versions
+            var versions = _context.Versions
+                .Where(v => v.ProjectItemID == project.ProjectItemID)
                 .Where(v => v.Version == version)
+                .OrderByDescending(v => v.CreateTime)
                 .FirstOrDefault();
             if(versions == null)
             {
@@ -195,7 +197,65 @@ namespace TianLiUpdate.API.Controllers
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.Version)
             .FirstOrDefault());
-            
         }
+
+        // GET: Projects/ProjectName/LatestVersion/DownloadUrl
+        [HttpGet("{name}/LatestVersion/DownloadUrl")]
+        public IActionResult GetLatestVersionDownloadUrl(string name)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if(project == null)
+            {
+                _logger.LogInformation("No project found");
+                return NotFound("No project found");
+            }
+            return Ok(_context.Versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .OrderByDescending(v => v.CreateTime)
+            .Select(v => v.DownloadUrl)
+            .FirstOrDefault());
+        }
+
+        // GET: Projects/ProjectName/LatestVersion/Hash
+        [HttpGet("{name}/LatestVersion/Hash")]
+        public IActionResult GetLatestVersionHash(string name)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if(project == null)
+            {
+                _logger.LogInformation("No project found");
+                return NotFound("No project found");
+            }
+            return Ok(_context.Versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .OrderByDescending(v => v.CreateTime)
+            .Select(v => v.Hash)
+            .FirstOrDefault());
+        }
+
+        // GET: Projects/ProjectName/LatestVersion/DownloadUrlAndHash
+        [HttpGet("{name}/LatestVersion/DownloadUrlAndHash")]
+        public IActionResult GetLatestVersionDownloadUrlAndHash(string name)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if(project == null)
+            {
+                _logger.LogInformation("No project found");
+                return NotFound("No project found");
+            }
+            return Ok(_context.Versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .OrderByDescending(v => v.CreateTime)
+            .Select(v => v.Hash+"|"+v.DownloadUrl)
+            .FirstOrDefault());
+        }
+
+        // GET: Projects/ProjectName/Version/VersionName/Files
     }
 }
