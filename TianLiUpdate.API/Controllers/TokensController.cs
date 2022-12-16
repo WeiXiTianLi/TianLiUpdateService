@@ -14,14 +14,15 @@ namespace TianLiUpdate.API.Controllers
         {
             _context = context;
         }
-
+        
+        /*
         // GET: /Tokens
         [HttpGet]
         public ActionResult<IEnumerable<Token>> GetTokens()
         {
             if (_context.Tokens == null)
             {
-                return NotFound();
+                return NotFound("Entity set 'Tokens'  is null.");
             }
             return _context.Tokens.ToList();
         }
@@ -31,12 +32,12 @@ namespace TianLiUpdate.API.Controllers
         {
             if (_context.Tokens == null)
             {
-                return NotFound();
+                return NotFound("Entity set 'Tokens'  is null.");
             }
             var token = _context.Tokens.Find(id);
             if (token == null)
             {
-                return NotFound();
+                return NotFound("Token not found.");
             }
             return token;
         }
@@ -47,7 +48,7 @@ namespace TianLiUpdate.API.Controllers
         {
             if (id != token.Id)
             {
-                return BadRequest();
+                return BadRequest("Token id is not equal to the id in the request body.");
             }
             _context.Entry(token).State = EntityState.Modified;
             try
@@ -58,7 +59,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 if (!TokenExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Token not found.");
                 }
                 else
                 {
@@ -67,13 +68,13 @@ namespace TianLiUpdate.API.Controllers
             }
             return NoContent();
         }
+        
         // POST: api/Tokens
         // Create a new token
         [HttpPost("Create")]
         public ActionResult<Token> PostToken()
         {
-            var token = new Token
-            {
+            var token = new Token{
                 Id = Guid.NewGuid(),
                 TokenString = Guid.NewGuid().ToString(),
                 LastUseTime = DateTime.Now
@@ -82,16 +83,21 @@ namespace TianLiUpdate.API.Controllers
             _context.SaveChanges();
             return Ok(token.TokenString);
         }
+        */
         [HttpPost("CreateTokenString")]
-        public ActionResult<Token> PostTokenString(string tokenString)
+        public ActionResult<Token> PostTokenString(string tokenString, string suToken)
         {
+            if (_context.Tokens.Where(t => t.TokenString == suToken).Count() == 0)
+            {
+                return Problem("Super user token is not valid.");
+            }
             if (_context.Tokens == null)
             {
                 return Problem("Entity set 'ArtifactContext.Tokens'  is null.");
             }
             var token = new Token
             {
-                Id = Guid.NewGuid(),
+                TokenID = Guid.NewGuid(),
                 TokenString = tokenString,
                 LastUseTime = DateTime.Now
             };
@@ -99,41 +105,28 @@ namespace TianLiUpdate.API.Controllers
             _context.SaveChanges();
             return Ok(token); //CreatedAtAction("GetToken", new { id = token.Id }, token);
         }
-        
-        // POST: api/Tokens
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public ActionResult<Token> PostToken(Token token)
-        {
-            if (_context.Tokens == null)
-            {
-                return Problem("Entity set 'ArtifactContext.Tokens'  is null.");
-            }
-            _context.Tokens.Add(token);
-            _context.SaveChanges();
-            return Ok(token); //CreatedAtAction("GetToken", new { id = token.Id }, token);
-        }
-        
+        /*
         // DELETE: api/Tokens/5
         [HttpDelete("{id}")]
         public IActionResult DeleteToken(Guid? id)
         {
             if (_context.Tokens == null)
             {
-                return NotFound();
+                return NotFound("Entity set 'Tokens'  is null.");
             }
             var token = _context.Tokens.Find(id);
             if (token == null)
             {
-                return NotFound();
+                return NotFound("Token not found.");
             }
             _context.Tokens.Remove(token);
             _context.SaveChanges();
             return NoContent();
         }
+        */
         private bool TokenExists(Guid? id)
         {
-            return (_context.Tokens?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Tokens?.Any(e => e.TokenID == id)).GetValueOrDefault();
         }
     }
 }

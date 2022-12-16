@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TianLiUpdate.API.Data;
 using TianLiUpdate.API.Models;
-
+/*
 namespace TianLiUpdate.API.Controllers
 {
     [Route("[controller]")]
@@ -57,3 +57,4 @@ namespace TianLiUpdate.API.Controllers
         }
     }
 }
+*/

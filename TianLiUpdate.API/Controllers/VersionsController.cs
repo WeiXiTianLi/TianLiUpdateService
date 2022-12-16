@@ -19,9 +19,32 @@ namespace TianLiUpdate.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            if (_context.Versions == null)
+            {
+                return NotFound();
+            }
             return Ok(_context.Versions);
         }
 
+        [HttpGet("{ProjectName}")]
+        public IActionResult GetProjectVersions(string ProjectName)
+        {
+            if (_context.Versions == null)
+            {
+                return NotFound();
+            }
+            var project = _context.Projects.
+                Where(p => p.Name == ProjectName).
+                FirstOrDefault();
+            if(project == null)
+            {
+                return NotFound("Project not found");
+            }
+            
+            return Ok(_context.Versions
+                .Where(v => v.ProjectItemID == project.ProjectItemID));
+        }
+        /*
         // GET api/<VersionsController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
@@ -89,5 +112,6 @@ namespace TianLiUpdate.API.Controllers
             _context.SaveChanges();
             return Ok();
         }
+        */
     }
 }
