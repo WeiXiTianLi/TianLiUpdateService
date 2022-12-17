@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /TianLiUpdate.API/appsettings.json
 /TianLiUpdate.API/appsettings.Development.json
+/TianLiUpdate.API/.config/dotnet-tools.json
