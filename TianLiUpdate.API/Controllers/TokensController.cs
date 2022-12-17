@@ -75,7 +75,7 @@ namespace TianLiUpdate.API.Controllers
         public ActionResult<Token> PostToken()
         {
             var token = new Token{
-                Id = Guid.NewGuid(),
+                TokenID = Guid.NewGuid(),
                 TokenString = Guid.NewGuid().ToString(),
                 LastUseTime = DateTime.Now
             };
