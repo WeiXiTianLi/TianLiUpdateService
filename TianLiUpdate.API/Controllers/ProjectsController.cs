@@ -173,7 +173,33 @@ namespace TianLiUpdate.API.Controllers
                 hash = v.Hash
             });
         }
-
+        // GET: Projects/ProjectName/list
+        [HttpGet("{name}/list")]
+        public IActionResult GetVersionList(string name)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if (project == null)
+            {
+                _logger.LogInformation("No project found");
+                return NotFound();
+            }
+            var v = _context.Versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .OrderByDescending(v => v.CreateTime);
+            if (v == null)
+            {
+                _logger.LogInformation("No version found");
+                return NotFound();
+            }
+            return Ok(v.Select(v => new
+            {
+                version = v.Version,
+                downloadUrl = v.DownloadUrl,
+                hash = v.Hash
+            }));
+        }
         // GET: Projects/ProjectName/Version
         [HttpGet("{name}/Version")]
         public IActionResult GetVersion(string name)
