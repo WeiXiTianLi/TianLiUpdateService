@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
+using System.Text.Json.Nodes;
 using TianLiUpdate.API.Data;
 using TianLiUpdate.API.Models;
 
@@ -39,7 +41,6 @@ namespace TianLiUpdate.API.Controllers
             return Ok(_context.Projects.Where(p => p.Name == name).FirstOrDefault());
         }
         */
-        /*
         // POST Projects
         [HttpPost]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -55,7 +56,6 @@ namespace TianLiUpdate.API.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        */
         /*
         // GET: Projects/ProjectName/Versions
         [HttpGet("{name}/Versions")]
@@ -139,12 +139,39 @@ namespace TianLiUpdate.API.Controllers
             version.ProjectItemID = project.ProjectItemID;
             _context.Versions.Add(version);
             project.Versions.Add(version);
-            Console.WriteLine("asdasd"+project.Versions.Count());
             _context.Projects.Update(project);
             _context.SaveChanges();
-            Console.WriteLine("asdasdsdasd"+project.Versions.Count());
 
             return Ok(version);
+        }
+
+        // GET: Projects/ProjectName
+        [HttpGet("{name}")]
+        public IActionResult GetVersionJson(string name)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if (project == null)
+            {
+                _logger.LogInformation("No project found");
+                return NotFound();
+            }
+            var v = _context.Versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .OrderByDescending(v => v.CreateTime)
+            .FirstOrDefault();
+            if (v == null)
+            {
+                _logger.LogInformation("No version found");
+                return NotFound();
+            }
+            return Ok(new
+            {
+                version = v.Version,
+                downloadUrl = v.DownloadUrl,
+                hash = v.Hash
+            });
         }
 
         // GET: Projects/ProjectName/Version

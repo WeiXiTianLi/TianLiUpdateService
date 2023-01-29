@@ -84,27 +84,27 @@ namespace TianLiUpdate.API.Controllers
             return Ok(token.TokenString);
         }
         */
-        [HttpPost("CreateTokenString")]
-        public ActionResult<Token> PostTokenString(string tokenString, string suToken)
-        {
-            if (_context.Tokens.Where(t => t.TokenString == suToken).Count() == 0)
-            {
-                return Problem("Super user token is not valid.");
-            }
-            if (_context.Tokens == null)
-            {
-                return Problem("Entity set 'ArtifactContext.Tokens'  is null.");
-            }
-            var token = new Token
-            {
-                TokenID = Guid.NewGuid(),
-                TokenString = tokenString,
-                LastUseTime = DateTime.Now
-            };
-            _context.Tokens.Add(token);
-            _context.SaveChanges();
-            return Ok(token); //CreatedAtAction("GetToken", new { id = token.Id }, token);
-        }
+        //[HttpPost("CreateTokenString")]
+        //public ActionResult<Token> PostTokenString(string tokenString, string suToken)
+        //{
+        //    if (_context.Tokens.Where(t => t.TokenString == suToken & t.TokenID == Guid.Empty).Count()== 0)
+        //    {
+        //        return Problem("Super user token is not valid.");
+        //    }
+        //    if (_context.Tokens == null)
+        //    {
+        //        return Problem("Entity set 'ArtifactContext.Tokens'  is null.");
+        //    }
+        //    var token = new Token
+        //    {
+        //        TokenID = Guid.NewGuid(),
+        //        TokenString = tokenString,
+        //        LastUseTime = DateTime.Now
+        //    };
+        //    _context.Tokens.Add(token);
+        //    _context.SaveChanges();
+        //    return Ok(token); //CreatedAtAction("GetToken", new { id = token.Id }, token);
+        //}
         /*
         // DELETE: api/Tokens/5
         [HttpDelete("{id}")]
