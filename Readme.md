@@ -4,17 +4,20 @@
 ### Projects
 
 ##### POST
-- [ ] /Projects
+- [x] /Projects
 - [x] \{name\}/Version
 
 ##### GET
-- [ ] /Projects/Names
-- [ ] /Projects/\{name\}/Versions
-- [x] \{name\}/\{version\}
+- [x] \{name\}
 - [x] \{name\}/Version
+- [x] \{name\}/list
 - [x] \{name\}/DownloadUrl
 - [x] \{name\}/Hash
 - [x] \{name\}/DownloadUrlAndHash
+
+##### PUT
+- [x] \{name\}/Version
+
 ### Tokens
 
 ##### POST
