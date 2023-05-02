@@ -275,6 +275,36 @@ namespace TianLiUpdate.API.Controllers
             .FirstOrDefault());
         }
 
-        // GET: Projects/ProjectName/Version/VersionName/Files
+        // DELETE: Projects/ProjectName/Version
+        [HttpDelete("{name}/Version")]
+        public IActionResult DeleteVersion(string name, string token, string version)
+        {
+            var tokens = _context.Tokens
+            .Where(t => t.TokenString == token);
+            if(tokens.Count() == 0)
+            {
+                _logger.LogInformation("Token Unauthorized");
+                return Unauthorized("Token Unauthorized");
+            }
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if(project == null)
+            {
+                _logger.LogInformation("No project found");
+                return NotFound("No project found");
+            }
+            var versions = _context.Versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .Where(v => v.Version == version);
+            if(versions.Count() == 0)
+            {
+                _logger.LogInformation("No version found");
+                return NotFound("No version found");
+            }
+            _context.Versions.RemoveRange(versions);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }
