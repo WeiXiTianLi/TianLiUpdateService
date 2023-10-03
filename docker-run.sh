@@ -1,0 +1,1 @@
+sudo docker run -e "ConnectionStrings.TianLiProjectContext=" --name TianLiUpdate.API -d -it --rm tianli.update-api:dev
