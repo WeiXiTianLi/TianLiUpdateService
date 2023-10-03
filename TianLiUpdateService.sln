@@ -9,6 +9,7 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "TianLiUpdate.UI", "TianLiUp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{0224EEB3-43DA-42E9-A1BD-C491A611A659}"
 	ProjectSection(SolutionItems) = preProject
+		docker-build.sh = docker-build.sh
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
