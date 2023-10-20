@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddDbContext<ProjectContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("TianLiProjectContext"),
-    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("TianLiProjectContext"))));
+options.UseSqlite(builder.Configuration.GetConnectionString("TianLiProjectContext")));
 
 builder.Services.AddControllersWithViews();
 
