@@ -2,7 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 5555
+EXPOSE 80
+EXPOSE 443
 
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
@@ -22,4 +23,4 @@ COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "TianLiUpdate.API.dll"]
 
 # need a volume save database file
-VOLUME ~/service/data/:/app/database
+# VOLUME ~/service/data/:/app/database
