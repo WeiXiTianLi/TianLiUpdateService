@@ -17,6 +17,7 @@ namespace TianLiUpdate.API.Models
         //public Tuple<string, string, string> HashFilePaths { get; set; } = new Tuple<string, string, string>(string.Empty, string.Empty, string.Empty);
         //public ICollection<FileHash> Files { get; set; } = new List<FileHash>();
         public string DownloadUrl { get; set; } = string.Empty;
+        public ICollection<FileHash> Files { get; set; } = new HashSet<FileHash>();
         public string Hash { get; set; } = string.Empty;
         public string UpdateLog { get; set; } = string.Empty;
         public DateTime CreateTime { get; set; } = DateTime.Now;
