@@ -1,1 +1,1 @@
-sudo docker run -e "ConnectionStrings:TianLiProjectContext=Server=rm-wz956mzd025767lbwbo.mysql.rds.aliyuncs.com;Database=tianli_project;user=yusuixian;pwd=7qua^B*WWy2\$idUUtf#y0bjzdX\$GQlol" --name TianLiUpdate.API -d -it --rm tianli.update-api:dev
+docker run --name tianli.update_service -v ~/service/data/:/app/database tianli.update-api:dev
