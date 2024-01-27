@@ -147,7 +147,13 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            return Ok(_context.Versions.ToList()
+            var versions = _context.Versions.ToList();
+            if (versions == null)
+            {
+                return NotFound("No versions found");
+            }
+
+            return Ok(versions
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.Version)
