@@ -1,1 +1,1 @@
-docker run --name tianli.update_service -v ~/service/data/:/app/database tianli.update-api:dev
+docker run --name tianli.update_service -v ~/service/data/:/app/database -p 34072:80 tianli.update-api:dev
