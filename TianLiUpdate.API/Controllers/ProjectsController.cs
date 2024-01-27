@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TianLiUpdate.API.Data;
 using TianLiUpdate.API.Models;
 
@@ -134,7 +134,8 @@ namespace TianLiUpdate.API.Controllers
             {
                 version = v.Version,
                 downloadUrl = v.DownloadUrl,
-                hash = v.Hash
+                hash = v.Hash,
+                dependFilesCount = v.Files.Count()
             }));
         }
         // GET: ProjectName/Version
