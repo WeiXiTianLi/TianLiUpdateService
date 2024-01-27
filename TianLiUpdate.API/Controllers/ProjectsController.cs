@@ -190,6 +190,24 @@ namespace TianLiUpdate.API.Controllers
             .Select(v => v.Hash + "|" + v.DownloadUrl)
             .FirstOrDefault());
         }
+        // GET: ProjectName/DependFiles
+        [HttpGet("{name}/DependFiles")]
+        public IActionResult GetVersionDependFiles(string name)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if (project == null)
+            {
+                return NotFound("No project found");
+            }
+            return Ok(_context.Versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .OrderByDescending(v => v.CreateTime)
+            .Select(v => v.Files)
+            .FirstOrDefault());
+        }
+
         // DELETE: ProjectName/Version
         [HttpDelete("{name}/Version")]
         public IActionResult DeleteVersion(string name, string token, string version)
