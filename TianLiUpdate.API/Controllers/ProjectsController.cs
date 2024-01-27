@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TianLiUpdate.API.Data;
 using TianLiUpdate.API.Models;
 
@@ -82,19 +82,26 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            var v = _context.Versions
-            .Where(v => v.ProjectItemID == project.ProjectItemID)
-            .OrderByDescending(v => v.CreateTime)
-            .FirstOrDefault();
-            if (v == null)
+            var versions = _context.Versions.ToList();
+            if (versions == null)
+            {
+                return NotFound("No versions found");
+            }
+
+            var version = versions
+                .Where(v => v.ProjectItemID == project.ProjectItemID)
+                .OrderByDescending(v => v.CreateTime)
+                .FirstOrDefault();
+
+            if (version == null)
             {
                 return NotFound("No version found");
             }
             return Ok(new
             {
-                version = v.Version,
-                downloadUrl = v.DownloadUrl,
-                hash = v.Hash
+                version = version.Version,
+                downloadUrl = version.DownloadUrl,
+                hash = version.Hash
             });
         }
         // GET: ProjectName/List
@@ -108,14 +115,21 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            var v = _context.Versions
-            .Where(v => v.ProjectItemID == project.ProjectItemID)
-            .OrderByDescending(v => v.CreateTime);
-            if (v == null)
+            var versions = _context.Versions.ToList();
+            if (versions == null)
+            {
+                return NotFound("No versions found");
+            }
+
+            var version = versions
+                .Where(v => v.ProjectItemID == project.ProjectItemID)
+                .OrderByDescending(v => v.CreateTime);
+
+            if (version == null)
             {
                 return NotFound("No version found");
             }
-            return Ok(v.Select(v => new
+            return Ok(version.Select(v => new
             {
                 version = v.Version,
                 downloadUrl = v.DownloadUrl,
@@ -133,7 +147,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            return Ok(_context.Versions
+            return Ok(_context.Versions.ToList()
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.Version)
@@ -150,7 +164,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            return Ok(_context.Versions
+            return Ok(_context.Versions.ToList()
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.DownloadUrl)
@@ -167,7 +181,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            return Ok(_context.Versions
+            return Ok(_context.Versions.ToList()
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.Hash)
@@ -184,7 +198,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            return Ok(_context.Versions
+            return Ok(_context.Versions.ToList()
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.Hash + "|" + v.DownloadUrl)
@@ -201,7 +215,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            return Ok(_context.Versions
+            return Ok(_context.Versions.ToList()
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.Files)
@@ -225,7 +239,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            var versions = _context.Versions
+            var versions = _context.Versions.ToList()
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .Where(v => v.Version == version);
             if (versions.Count() == 0)
