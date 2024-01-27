@@ -115,6 +115,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
+            var files = _context.Files.ToList();
             var versions = _context.Versions.ToList();
             if (versions == null)
             {
