@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TianLiUpdate.API.Data;
-using TianLiUpdate.API.Models;
-
+/*
 namespace TianLiUpdate.API.Controllers
 {
     [Route("[controller]")]
@@ -38,10 +34,11 @@ namespace TianLiUpdate.API.Controllers
             _context.SaveChanges();
             return Ok(token.TokenString);
         }
-
+        
         private Token? GetSuperToken()
         {
             return _context.Tokens.Find(Guid.Empty.ToString());
         }
     }
 }
+*/
