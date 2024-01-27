@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using TianLiUpdate.API.Data;
 using TianLiUpdate.API.Models;
 
@@ -215,10 +215,50 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
-            return Ok(_context.Versions.ToList()
+            var files = _context.Files.ToList();
+            var versions = _context.Versions.ToList();
+            if (versions == null)
+            {
+                return NotFound("No versions found");
+            }
+
+            return Ok(versions
             .Where(v => v.ProjectItemID == project.ProjectItemID)
             .OrderByDescending(v => v.CreateTime)
             .Select(v => v.Files)
+            .Select(fs => fs.Select(f => new
+            {
+                fileName = f.FileName,
+                filePath = f.FilePath,
+                downloadUrl = f.DownloadUrl,
+                hash = f.Hash
+            }))
+            .FirstOrDefault());
+        }
+
+        // GET: ProjectName/DependFiles
+        [HttpGet("{name}/DependFilesDownloadUrlAndHash")]
+        public IActionResult GetVersionDependFilesDownloadUrlAndHash(string name)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if (project == null)
+            {
+                return NotFound("No project found");
+            }
+            var files = _context.Files.ToList();
+            var versions = _context.Versions.ToList();
+            if (versions == null)
+            {
+                return NotFound("No versions found");
+            }
+
+            return Ok(versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .OrderByDescending(v => v.CreateTime)
+            .Select(v => v.Files)
+            .Select(fs => string.Join("\n", fs.Select(f => f.Hash + "|" + f.DownloadUrl).ToArray()))
             .FirstOrDefault());
         }
 
