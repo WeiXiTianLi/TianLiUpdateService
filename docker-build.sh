@@ -1,1 +1,1 @@
-sudo docker build -f "TianLiUpdate.API/Dockerfile" --force-rm -t tianli.update-api:dev --target base --label "weixitianli" --label "weixitianli.project-name=TianLiUpdate.API" ./TianLiUpdate.API
+sudo docker build -f "TianLiUpdate.API/Dockerfile" --force-rm -t tianli.update-api:dev --target final --label "weixitianli" --label "weixitianli.project-name=TianLiUpdate.API" .
