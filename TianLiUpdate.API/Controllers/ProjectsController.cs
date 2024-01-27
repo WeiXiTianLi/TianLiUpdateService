@@ -66,8 +66,6 @@ namespace TianLiUpdate.API.Controllers
             version.Create_TokenId = tokens.First().TokenID;
             version.ProjectItemID = project.ProjectItemID;
             _context.Versions.Add(version);
-            project.Versions.Add(version);
-            _context.Projects.Update(project);
             _context.SaveChanges();
 
             return Ok(version);
