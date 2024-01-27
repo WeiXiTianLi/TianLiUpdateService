@@ -105,8 +105,8 @@ namespace TianLiUpdate.API.Controllers
             });
         }
         // GET: ProjectName/List
-        [HttpGet("{name}/List")]
-        public IActionResult GetVersionList(string name)
+        [HttpGet("{name}/Versions")]
+        public IActionResult GetVersionLists(string name)
         {
             var project = _context.Projects
             .Where(p => p.Name == name)
