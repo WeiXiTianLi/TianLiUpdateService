@@ -141,7 +141,7 @@ namespace TianLiUpdate.API.Controllers
             }));
         }
         // GET: ProjectName/Version
-        [HttpGet("{name}/Version")]
+        [HttpGet("{name}/LatestVersion")]
         public IActionResult GetVersion(string name)
         {
             var project = _context.Projects
@@ -292,7 +292,7 @@ namespace TianLiUpdate.API.Controllers
         }
 
         // GET: ProjectName/DependFiles
-        [HttpGet("{name}/DependFiles/{version_content}")]
+        [HttpGet("{name}/{version_content}/DependFiles")]
         public IActionResult GetOneVersionDependFiles(string name, string version_content)
         {
             var project = _context.Projects
@@ -331,7 +331,7 @@ namespace TianLiUpdate.API.Controllers
         }
 
         // GET: ProjectName/DependFiles
-        [HttpGet("{name}/DependFilesDownloadUrlAndHash/{version_content}")]
+        [HttpGet("{name}/{version_content}/DependFilesDownloadUrlAndHash")]
         public IActionResult GetOneVersionDependFilesDownloadUrlAndHash(string name, string version_content)
         {
             var project = _context.Projects
