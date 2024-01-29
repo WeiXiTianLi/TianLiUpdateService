@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using TianLiUpdate.API.Data;
 using TianLiUpdate.API.Models;
 
@@ -82,6 +82,7 @@ namespace TianLiUpdate.API.Controllers
             {
                 return NotFound("No project found");
             }
+            var files = _context.Files.ToList();
             var versions = _context.Versions.ToList();
             if (versions == null)
             {
@@ -101,7 +102,8 @@ namespace TianLiUpdate.API.Controllers
             {
                 version = version.Version,
                 downloadUrl = version.DownloadUrl,
-                hash = version.Hash
+                hash = version.Hash,
+                dependFilesCount = version.Files.Count()
             });
         }
         // GET: ProjectName/List
