@@ -232,18 +232,25 @@ namespace TianLiUpdate.API.Controllers
                 return NotFound("No versions found");
             }
 
-            return Ok(versions
-            .Where(v => v.ProjectItemID == project.ProjectItemID)
-            .OrderByDescending(v => v.CreateTime)
-            .Select(v => v.Files)
-            .Select(fs => fs.Select(f => new
+            var version = versions
+                .Where(v => v.ProjectItemID == project.ProjectItemID)
+                .OrderByDescending(v => v.CreateTime)
+                .FirstOrDefault();
+            if (version == null)
+            {
+                return NotFound("No version found");
+            }
+            if (version.Files == null)
+            {
+                return NotFound("No files found");
+            }
+            return Ok(version.Files.Select(f => new
             {
                 fileName = f.FileName,
                 filePath = f.FilePath,
                 downloadUrl = f.DownloadUrl,
                 hash = f.Hash
-            }))
-            .FirstOrDefault());
+            }));
         }
 
         // GET: ProjectName/DependFiles
