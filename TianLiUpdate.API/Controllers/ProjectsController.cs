@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TianLiUpdate.API.Data;
 using TianLiUpdate.API.Models;
 
@@ -278,6 +278,73 @@ namespace TianLiUpdate.API.Controllers
             .Select(fs => string.Join("\n", fs.Select(f => f.Hash + "|" + f.DownloadUrl).ToArray()))
             .FirstOrDefault());
         }
+
+        // GET: ProjectName/DependFiles
+        [HttpGet("{name}/DependFiles/{version_content}")]
+        public IActionResult GetOneVersionDependFiles(string name, string version_content)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if (project == null)
+            {
+                return NotFound("No project found");
+            }
+            var files = _context.Files.ToList();
+            var versions = _context.Versions.ToList();
+            if (versions == null)
+            {
+                return NotFound("No versions found");
+            }
+
+            var version = versions
+                .Where(v => v.ProjectItemID == project.ProjectItemID)
+                .Where(v => v.Version == version_content)
+                .FirstOrDefault();
+            if (version == null)
+            {
+                return NotFound("No version found");
+            }
+            if (version.Files == null)
+            {
+                return NotFound("No files found");
+            }
+            return Ok(version.Files.Select(f => new
+            {
+                fileName = f.FileName,
+                filePath = f.FilePath,
+                downloadUrl = f.DownloadUrl,
+                hash = f.Hash
+            }));
+        }
+
+        // GET: ProjectName/DependFiles
+        [HttpGet("{name}/DependFilesDownloadUrlAndHash/{version_content}")]
+        public IActionResult GetOneVersionDependFilesDownloadUrlAndHash(string name, string version_content)
+        {
+            var project = _context.Projects
+            .Where(p => p.Name == name)
+            .FirstOrDefault();
+            if (project == null)
+            {
+                return NotFound("No project found");
+            }
+            var files = _context.Files.ToList();
+            var versions = _context.Versions.ToList();
+            if (versions == null)
+            {
+                return NotFound("No versions found");
+            }
+
+            return Ok(versions
+            .Where(v => v.ProjectItemID == project.ProjectItemID)
+            .Where(v => v.Version == version_content)
+            .Select(v => v.Files)
+            .Select(fs => string.Join("\n", fs.Select(f => f.Hash + "|" + f.DownloadUrl).ToArray()))
+            .FirstOrDefault());
+        }
+
+
 
         // DELETE: ProjectName/Version
         [HttpDelete("{name}/Version")]
