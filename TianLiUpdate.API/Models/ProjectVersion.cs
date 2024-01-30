@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace TianLiUpdate.API.Models
 {
     /*
@@ -7,22 +9,31 @@ namespace TianLiUpdate.API.Models
         NoPkg,
     }
     */
-    public class ProjectVersion
+    public record ProjectVersion
     {
-        public Guid ProjectVersionID { get; set; } = Guid.Empty;
-        public Guid ProjectItemID { get; set; }
+        [Key]
+        [Required]
+        public Guid Id { get; set; } = Guid.Empty;
+        [Required]
         public string Version { get; set; } = string.Empty;
+        [Required]
         public string Description { get; set; } = string.Empty;
-       // public UpdatePkgMode UpdatePkgMode { get; set; } = UpdatePkgMode.AllPkg;
-        //public Tuple<string, string, string> HashFilePaths { get; set; } = new Tuple<string, string, string>(string.Empty, string.Empty, string.Empty);
-        //public ICollection<FileHash> Files { get; set; } = new List<FileHash>();
+        [Required]
         public string DownloadUrl { get; set; } = string.Empty;
-        public ICollection<FileHash> Files { get; set; } = new HashSet<FileHash>();
+        [Required]
+        public HashSet<File> Files { get; } = new();
+        [Required]
         public string Hash { get; set; } = string.Empty;
+        [Required]
         public string UpdateLog { get; set; } = string.Empty;
+        [Required]
+        public bool IsDraft { get; set; } = false;
+        [Required]
         public DateTime CreateTime { get; set; } = DateTime.Now;
-        public Guid Create_TokenId { get; set; } = Guid.Empty;
-        // public Guid ProjectId { get; set; } = Guid.Empty;
-        //public ProjectItem Project { get; set; } = new ProjectItem();
+        [Required]
+        public Guid CreateTokenId { get; set; } = Guid.Empty;
+
+        [Required]
+        public required Project Project { get; set; }
     }
 }

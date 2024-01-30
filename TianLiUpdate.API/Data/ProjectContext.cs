@@ -1,5 +1,5 @@
-using TianLiUpdate.API.Models;
 using Microsoft.EntityFrameworkCore;
+using TianLiUpdate.API.Models;
 
 
 namespace TianLiUpdate.API.Data
@@ -9,18 +9,9 @@ namespace TianLiUpdate.API.Data
         public ProjectContext(DbContextOptions<ProjectContext> options) : base(options)
         {
         }
-        
-        public DbSet<ProjectItem> Projects { get; set; }
-        public DbSet<ProjectVersion> Versions { get; set; }
-        public DbSet<FileHash> Files { get; set; }
-        public DbSet<Token> Tokens { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ProjectItem>().ToTable("Project");
-            modelBuilder.Entity<ProjectVersion>().ToTable("Version");
-            modelBuilder.Entity<FileHash>().ToTable("File");
-            modelBuilder.Entity<Token>().ToTable("Token");
-        }
+        public virtual DbSet<Project> Projects { get; set; }
+        public virtual DbSet<ProjectVersion> Versions { get; set; }
+        public virtual DbSet<Models.File> Files { get; set; }
+        public virtual DbSet<Token> Tokens { get; set; }
     }
 }

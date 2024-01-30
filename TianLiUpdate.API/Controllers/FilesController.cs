@@ -31,7 +31,7 @@ namespace TianLiUpdate.API.Controllers
 
         // POST api/<FilesController>
         [HttpPost]
-        public IActionResult Post(FileHash value)
+        public IActionResult Post(File value)
         {
             _context.Files.Add(value);
             _context.SaveChanges();
@@ -40,7 +40,7 @@ namespace TianLiUpdate.API.Controllers
 
         // PUT api/<FilesController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, FileHash value)
+        public IActionResult Put(int id, File value)
         {
             _context.Files.Update(value);
             _context.SaveChanges();
