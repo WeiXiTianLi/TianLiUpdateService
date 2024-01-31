@@ -441,13 +441,12 @@ namespace TianLiUpdate.API.Controllers
                 return NotFound("No version found");
             }
             var versionAllFiles = version.Select(v => v.Files).FirstOrDefault();
-            if (versionAllFiles == null || versionAllFiles.Count() == 0)
+            if (versionAllFiles != null && versionAllFiles.Count() != 0)
             {
-                return NotFound("No files found");
-            }
-            foreach (var file in versionAllFiles)
-            {
-                _context.Files.Remove(file);
+                foreach (var file in versionAllFiles)
+                {
+                    _context.Files.Remove(file);
+                }
             }
             _context.Versions.RemoveRange(version);
             _context.SaveChanges();
