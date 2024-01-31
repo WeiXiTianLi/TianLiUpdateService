@@ -16,6 +16,19 @@ namespace TianLiUpdate.API.Controllers
             _context = context;
         }
 
+        private IActionResult CheckToken(string token)
+        {
+#if DEBUG
+            return Ok();
+#endif
+            var tokens = _context.Tokens.Where(t => t.TokenString == token);
+            if (tokens.Count() == 0)
+            {
+                return Unauthorized("Token Unauthorized");
+            }
+            return Ok();
+        }
+
         // GET: Projects/Names
         [HttpGet("Projects/Names")]
         public ActionResult<IEnumerable<string>> GetProjectsName()
@@ -27,16 +40,16 @@ namespace TianLiUpdate.API.Controllers
         [HttpPost]
         public IActionResult PostProject(AddProjectRequest projectRequest, string token)
         {
-            var tokens = _context.Tokens.Where(t => t.TokenString == token);
-            if (tokens.Count() == 0)
+            var checkRes = CheckToken(token);
+            if (checkRes is UnauthorizedResult)
             {
-                return Unauthorized("Token Unauthorized");
+                return checkRes;
             }
+
             _context.Projects.Add(new Project
             {
                 Id = Guid.NewGuid(),
-                Name = projectRequest.ProjectName,
-                CreateTokenId = tokens.First().TokenId
+                Name = projectRequest.ProjectName
             });
             _context.SaveChanges();
             return Ok();
@@ -45,11 +58,10 @@ namespace TianLiUpdate.API.Controllers
         [HttpPost("{projectName}/Version")]
         public IActionResult PostVersion(string projectName, string token, [FromBody] AddVersionRequest versionRequest)
         {
-            var tokens = _context.Tokens
-            .Where(t => t.TokenString == token);
-            if (tokens.Count() == 0)
+            var checkRes = CheckToken(token);
+            if (checkRes is UnauthorizedResult)
             {
-                return Unauthorized("Token Unauthorized");
+                return checkRes;
             }
             var project = _context.Projects
             .Where(p => p.Name == projectName)
@@ -59,9 +71,10 @@ namespace TianLiUpdate.API.Controllers
                 return NotFound("No project found");
             }
 
+
             var versions = project.Versions
             .Where(v => v.Version == versionRequest.Version);
-            if (versions.Count() != 0)
+            if (versions != null && versions.Count() != 0)
             {
                 return BadRequest("Version already exists");
             }
@@ -72,22 +85,24 @@ namespace TianLiUpdate.API.Controllers
             {
                 Id = Guid.NewGuid(),
                 Version = versionRequest.Version,
+                Description = "",
                 DownloadUrl = versionRequest.DownloadUrl,
                 Hash = versionRequest.Hash,
                 UpdateLog = versionRequest.UpdateLog,
                 IsDraft = isDraft,
                 CreateTime = DateTime.Now,
-                CreateTokenId = tokens.First().TokenId,
                 Project = project,
             };
-            _context.Versions.Add(projectVersion);
-            _context.SaveChanges();
+            project.Versions.Add(projectVersion);
+            //_context.SaveChanges();
 
             if (versionRequest.Files != null)
             {
+                HashSet<Models.File> filesToAdd = new();
+
                 versionRequest.Files.All(f =>
                 {
-                    _context.Files.Add(new Models.File
+                    filesToAdd.Add(new Models.File
                     {
                         Id = Guid.NewGuid(),
                         FileName = f.FileName,
@@ -98,7 +113,11 @@ namespace TianLiUpdate.API.Controllers
                     });
                     return true;
                 });
+                projectVersion.Files.IntersectWith(filesToAdd);
+                _context.Files.AddRange(filesToAdd);
             }
+            _context.Versions.Add(projectVersion);
+            _context.Projects.Update(project);
             _context.SaveChanges();
 
             return Ok(versionRequest);
@@ -399,12 +418,12 @@ namespace TianLiUpdate.API.Controllers
         [HttpDelete("{projectName}/Version")]
         public IActionResult DeleteVersion(string projectName, string token, string versionString)
         {
-            var tokens = _context.Tokens
-            .Where(t => t.TokenString == token);
-            if (tokens.Count() == 0)
+            var checkRes = CheckToken(token);
+            if (checkRes is UnauthorizedResult)
             {
-                return Unauthorized("Token Unauthorized");
+                return checkRes;
             }
+
             var project = _context.Projects
             .Where(p => p.Name == projectName)
             .FirstOrDefault();

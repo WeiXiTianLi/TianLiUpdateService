@@ -1,15 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace TianLiUpdate.API.Models
 {
     public record Token
     {
-        [Key]
-        [Required]
-        public required Guid TokenId { get; set; } = Guid.Empty;
-        [Required]
-        public required string TokenString { get; set; } = Guid.NewGuid().ToString();
-        [Required]
-        public required DateTime LastUseTime { get; set; } = DateTime.Now;
+        public Guid Id { get; set; }
+        public string TokenString { get; set; }
+        public DateTime LastUseTime { get; set; }
     }
 }
