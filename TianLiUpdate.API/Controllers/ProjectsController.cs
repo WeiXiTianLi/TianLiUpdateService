@@ -432,14 +432,24 @@ namespace TianLiUpdate.API.Controllers
                 return NotFound("No project found");
             }
             var versions = _context.Versions.ToList();
+            var files = _context.Files.ToList();
 
             var version = project.Versions
             .Where(v => v.Version == versionString);
-            if (versions.Count() == 0)
+            if (version == null || version.Count() == 0)
             {
                 return NotFound("No version found");
             }
-            _context.Versions.RemoveRange(versions);
+            var versionAllFiles = version.Select(v => v.Files).FirstOrDefault();
+            if (versionAllFiles == null || versionAllFiles.Count() == 0)
+            {
+                return NotFound("No files found");
+            }
+            foreach (var file in versionAllFiles)
+            {
+                _context.Files.Remove(file);
+            }
+            _context.Versions.RemoveRange(version);
             _context.SaveChanges();
             return Ok();
         }
